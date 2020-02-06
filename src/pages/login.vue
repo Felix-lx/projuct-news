@@ -17,9 +17,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-import ttInput from '../components/input'
-import ttButton from '../components/button'
 export default {
   data () {
     return {
@@ -27,16 +24,11 @@ export default {
       password: ''
     }
   },
-  components: {
-    ttInput,
-    ttButton
-  },
   methods: {
     async login () {
-      console.log(111)
       // 发送请求
       if (!this.username || !this.password) return
-      const res = await axios({
+      const res = await this.$axios({
         method: 'post',
         url: 'http://localhost:3000/login',
         data: {
@@ -44,7 +36,17 @@ export default {
           password: this.password
         }
       })
-      console.log(res)
+      if (res.data.statusCode === 200) {
+        console.log(res)
+        // 引入 Toast 组件后，会自动在 Vue 的 prototype 上挂载 $toast 方法，便于在组件内调用。
+        this.$toast.success('登陆成功')
+        const { token, user } = res.data.data
+        localStorage.setItem('token', token)
+        localStorage.setItem('user_id', user.id)
+        this.$router.push('/profile')
+      } else if (res.data.statusCode === 401) {
+        this.$toast.fail('用户名或密码错误')
+      }
     }
   }
 }
