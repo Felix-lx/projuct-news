@@ -1,5 +1,5 @@
 <template>
-<div class="login">
+  <div class="login">
     <div class="closebtn">
       <em class="iconfont iconicon-test"></em>
     </div>
@@ -23,6 +23,11 @@ export default {
       username: '',
       password: ''
     }
+  },
+  created () {
+    const { username, password } = this.$route.params
+    this.username = username
+    this.password = password
   },
   methods: {
     async login () {

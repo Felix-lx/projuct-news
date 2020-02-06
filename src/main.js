@@ -11,11 +11,13 @@ import 'lib-flexible'
 // 导入封装的组件
 import ttInput from './components/input'
 import ttButton from './components/button'
+import ttNav from './components/nav'
 
 // 导入vant-ui
 import { Toast } from 'vant'
 Vue.component('ttInput', ttInput)
 Vue.component('ttButton', ttButton)
+Vue.component('ttNav', ttNav)
 Vue.use(Toast)
 
 // 阻止启动生产消息
