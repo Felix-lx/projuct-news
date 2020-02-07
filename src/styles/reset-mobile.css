@@ -75,6 +75,7 @@ textarea {
 }
 /* 移动端图片自适应 */
 img{
+    display: block;
     vertical-align: middle; 
 }
 

@@ -1,15 +1,19 @@
 <template>
   <div class="profile">
-    <div class="user-info">
+    <div class="user-info" @click="$router.push('/editProfile')">
       <div class="img">
-        <img src="http://00.minipic.eastday.com/20161223/20161223175745_ea9a56ee5e29e14be4b9526a1bbcab55_8.jpeg" alt="">
+        <!-- loading的作用：img设置了默认图片，在发送axios请求时，会先显示默认图片。等请求成功再显示头像
+        因此，在请求过程中不让img显示，解决“闪一下”的问题 -->
+        <img v-show="loading" :src="avatar" alt="">
       </div>
       <div class="info">
         <p>
-          <i class="iconfont iconxingbienan"></i>
-          <span>火星网友</span>
+          <!-- 通过返回的数据判断男女显示的图标 -->
+          <i v-if="profile.gender===1" class="iconfont iconxingbienan" style="color:skyblue"></i>
+          <i v-else class="iconfont iconxingbienv" style="color:pink"></i>
+          <span>{{profile.nickname}}</span>
         </p>
-        <p>2020-01-01</p>
+        <p>{{profile.create_data | time}}</p>
       </div>
       <div class="icon">
         <i class="iconfont iconjiantou1"></i>
@@ -19,17 +23,63 @@
       <tt-nav name="我的关注" desc="关注的用户" @click="fn"></tt-nav>
       <tt-nav name="我得跟帖" desc="跟帖/回复" @click="fn"></tt-nav>
       <tt-nav name="我的收藏" desc="文章/视频" @click="fn"></tt-nav>
-      <tt-nav name="设置" @click="fn"></tt-nav>
+      <tt-nav name="设置" @click="$router.push('/editProfile')"></tt-nav>
+      <tt-nav name="退出" @click="logout"></tt-nav>
 
     </div>
   </div>
 </template>
 
 <script>
+// 导入默认图片
+import img from '../assets/avatar.jpg'
 export default {
+  computed: {
+    avatar () {
+      if (this.profile.head_img) {
+        return this.$axios.defaults.baseURL + this.profile.head_img
+      } else {
+        return img
+      }
+    }
+  },
+  data () {
+    return {
+      // 用于存放返回的数据
+      profile: {},
+      loading: false
+    }
+  },
+  async created () {
+    const token = localStorage.getItem('token')
+    const userId = localStorage.getItem('user_id')
+    const res = await this.$axios.get(`http://localhost:3000/user/${userId}`, {
+      headers: {
+        Authorization: token
+      }
+    })
+    // console.log(res)
+    this.profile = res.data.data
+    this.loading = true
+    console.log(this.profile)
+  },
   methods: {
     fn () {
-      console.log(111)
+      console.log('还没完成')
+    },
+    async logout () {
+      try {
+        await this.$dialog.confirm({
+          title: '温馨提示',
+          message: '确定要退出吗？'
+        })
+        localStorage.removeItem('token')
+        localStorage.removeItem('user_id')
+        this.$router.push('/login')
+        this.$toast.success('退出成功')
+      } catch {
+        this.$toast('操作取消')
+      }
     }
   }
 }
@@ -42,9 +92,11 @@ export default {
     display: flex;
     border-bottom: 5px solid #ccc;
     .img{
+      width:70px;
+      height:70px;
       img{
-      width: 70px;
-      height: 70px;
+      width: 100%;
+      height: 100%;
       border-radius: 35px;
       }
 
