@@ -20,9 +20,9 @@
       </div>
     </div>
     <div class="user-list">
-      <tt-nav name="我的关注" desc="关注的用户" @click="fn"></tt-nav>
-      <tt-nav name="我得跟帖" desc="跟帖/回复" @click="fn"></tt-nav>
-      <tt-nav name="我的收藏" desc="文章/视频" @click="fn"></tt-nav>
+      <tt-nav name="我的关注" desc="关注的用户" @click="$router.push('/myFollow')"></tt-nav>
+      <tt-nav name="我得跟帖" desc="跟帖/回复" @click="$router.push('/myComments')"></tt-nav>
+      <tt-nav name="我的收藏" desc="文章/视频" @click="$router.push('/myCollect')"></tt-nav>
       <tt-nav name="设置" @click="$router.push('/editProfile')"></tt-nav>
       <tt-nav name="退出" @click="logout"></tt-nav>
 
@@ -53,20 +53,16 @@ export default {
   async created () {
     const token = localStorage.getItem('token')
     const userId = localStorage.getItem('user_id')
-    const res = await this.$axios.get(`http://localhost:3000/user/${userId}`, {
+    const res = await this.$axios.get(`/user/${userId}`, {
       headers: {
         Authorization: token
       }
     })
-    // console.log(res)
     this.profile = res.data.data
     this.loading = true
-    console.log(this.profile)
+    // console.log(this.profile)
   },
   methods: {
-    fn () {
-      console.log('还没完成')
-    },
     async logout () {
       try {
         await this.$dialog.confirm({

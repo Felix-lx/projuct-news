@@ -40,7 +40,7 @@ Vue.prototype.$axios = axios
 
 // 给axios设置默认的baseURL (基准路径)  会自动拼接url参数
 axios.defaults.baseURL = 'http://localhost:3000'
-// 给axios设置拦截响应器
+// 给axios设置响应拦截器
 axios.interceptors.response.use(function (response) {
   // 对响应数据做一些通用的处理
   // 判断状态码是否是401或者信息是否是“用户信息验证失败”
@@ -53,6 +53,20 @@ axios.interceptors.response.use(function (response) {
   return response
 }, function (error) {
   // 对响应错误的处理
+  return Promise.reject(error)
+})
+
+// 给axios设置请求拦截器配置token，在之后发送axios请求时毋需再配置token
+axios.interceptors.request.use(function (config) {
+  // 在发送请求之前做些什么 config是指请求的配置参数
+  // 通过config.header设置请求头
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = token
+  }
+  return config
+}, function (error) {
+  // 对请求错误做些什么
   return Promise.reject(error)
 })
 

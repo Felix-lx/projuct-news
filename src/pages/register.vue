@@ -34,7 +34,7 @@ export default {
       if (!this.form.username || !this.form.nickname || !this.form.password) {
         return this.$toast.fail('请输入正确的注册信息')
       }
-      const res = await this.$axios.post(`http://localhost:3000/register`, this.form)
+      const res = await this.$axios.post(`/register`, this.form)
       console.log(res)
       if (res.data.statusCode === 401) {
         return this.$toast('用户名已存在')

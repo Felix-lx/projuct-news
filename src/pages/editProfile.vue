@@ -69,26 +69,17 @@ export default {
   methods: {
     // 将页面渲染封装成方法，以便随时调用
     async getProfile () {
-      const token = localStorage.getItem('token')
       const userId = localStorage.getItem('user_id')
-      const res = await this.$axios.get(`/user/${userId}`, {
-        headers: {
-          Authorization: token
-        }
-      })
+      const res = await this.$axios.get(`/user/${userId}`)
       this.profile = res.data.data
       this.loading = true
-      console.log(this.profile)
+      // console.log(this.profile)
     },
+    // 修改个人信息
     async editProfile (data) {
-      const token = localStorage.getItem('token')
       const userId = localStorage.getItem('user_id')
-      const res = await this.$axios.post(`/user_update/${userId}`, data, {
-        headers: {
-          Authorization: token
-        }
-      })
-      console.log(res)
+      const res = await this.$axios.post(`/user_update/${userId}`, data)
+      // console.log(res)
       if (res.data.statusCode === 200) {
         this.getProfile()
         this.$toast.success('修改成功')
@@ -106,6 +97,7 @@ export default {
       this.passWordShow = true
       this.passWordValue = this.profile.password
     },
+    // 修改密码发送给后台更新
     editPassWord () {
       this.editProfile({ password: this.passWordValue })
     },
@@ -113,6 +105,7 @@ export default {
       this.genderShow = true
       this.genderValue = this.profile.gender
     },
+    // 修改性别，发送给后台并更新
     editGender () {
       this.editProfile({ gender: this.genderValue })
     }
