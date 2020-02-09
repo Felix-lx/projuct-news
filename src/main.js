@@ -14,15 +14,17 @@ import ttInput from './components/input'
 import ttButton from './components/button'
 import ttNav from './components/nav'
 import ttHeader from './components/header'
+import ttNewsList from './components/newsList'
 
 // 导入vant-ui
-import { Toast, Dialog, Field, CellGroup, Cell, RadioGroup, Radio } from 'vant'
+import { Toast, Dialog, Field, CellGroup, Cell, RadioGroup, Radio, List, Tab, Tabs } from 'vant'
 
 // 给封装的组件设置组件的名字
 Vue.component('ttInput', ttInput)
 Vue.component('ttButton', ttButton)
 Vue.component('ttNav', ttNav)
 Vue.component('ttHeader', ttHeader)
+Vue.component('ttNewsList', ttNewsList)
 
 Vue.use(Toast)
 Vue.use(Dialog)
@@ -31,6 +33,9 @@ Vue.use(CellGroup)
 Vue.use(Cell)
 Vue.use(RadioGroup)
 Vue.use(Radio)
+Vue.use(List)
+Vue.use(Tab)
+Vue.use(Tabs)
 
 // 阻止启动生产消息
 Vue.config.productionTip = false
@@ -71,8 +76,8 @@ axios.interceptors.request.use(function (config) {
 })
 
 // 时间过滤器
-Vue.filter('time', function (input) {
-  return moment(input).format('YYYY-MM-DD')
+Vue.filter('time', function (input, format = 'YYYY-MM-DD') {
+  return moment(input).format(format)
 })
 // 创建根实例
 new Vue({
