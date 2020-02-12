@@ -8,6 +8,7 @@ import MyFollow from '../pages/myFollow'
 import MyComments from '../pages/myComments'
 import MyCollect from '../pages/myCollect'
 import Home from '../pages/home'
+import NewsDetail from '../pages/newsDetail'
 
 Vue.use(VueRouter)
 
@@ -20,7 +21,8 @@ const routes = [
   { path: '/myFollow', component: MyFollow, name: 'myFollow' },
   { path: '/myComments', component: MyComments, name: 'myComments' },
   { path: '/myCollect', component: MyCollect, name: 'myCollect' },
-  { path: '/home', component: Home, name: 'home' }
+  { path: '/home', component: Home, name: 'home', meta: { keepAlive: true } },
+  { path: '/newsDetail/:id', component: NewsDetail, name: 'newsDetail' }
 
 ]
 
@@ -42,7 +44,7 @@ router.beforeEach(function (to, from, next) {
     if (token) {
       next()
     } else {
-      next('/login')
+      router.push('/login')
     }
   } else {
     next()

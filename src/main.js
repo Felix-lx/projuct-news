@@ -17,7 +17,7 @@ import ttHeader from './components/header'
 import ttNewsList from './components/newsList'
 
 // 导入vant-ui
-import { Toast, Dialog, Field, CellGroup, Cell, RadioGroup, Radio, List, Tab, Tabs } from 'vant'
+import { Toast, Dialog, Field, CellGroup, Cell, RadioGroup, Radio, List, Tab, Tabs, PullRefresh, Sticky, Button } from 'vant'
 
 // 给封装的组件设置组件的名字
 Vue.component('ttInput', ttInput)
@@ -36,6 +36,9 @@ Vue.use(Radio)
 Vue.use(List)
 Vue.use(Tab)
 Vue.use(Tabs)
+Vue.use(PullRefresh)
+Vue.use(Sticky)
+Vue.use(Button)
 
 // 阻止启动生产消息
 Vue.config.productionTip = false

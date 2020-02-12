@@ -77,6 +77,7 @@ textarea {
 img{
     display: block;
     vertical-align: middle; 
+    width: 100%;
 }
 
 /* 小标签废物利用 */

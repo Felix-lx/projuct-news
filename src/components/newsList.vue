@@ -1,7 +1,7 @@
 <template>
-  <div class="newsList">
+  <div class="newsList" @click="$router.push(`/newsDetail/${post.id}`)">
     <!-- 视频的显示模式 -->
-    <div class="info info-video" v-if="post.type===2" @click="handlefn">
+    <div class="info info-video" v-if="post.type===2" >
       <div class="top">
         <p class="two-txt-cut">{{post.title}}</p>
       </div>
@@ -17,7 +17,7 @@
       </div>
     </div>
     <!-- 小于三张图片的显示模式 -->
-    <div class="info info-pic1" v-else-if="post.cover.length < 3" @click="handlefn">
+    <div class="info info-pic1" v-else-if="post.cover.length < 3">
       <div class="left">
         <p class="two-txt-cut">{{post.title}}</p>
         <div class="other">
@@ -30,7 +30,7 @@
       </div>
     </div>
     <!-- 大于等于三张图片的显示模式 -->
-    <div class="info info-pic3" v-else @click="handlefn">
+    <div class="info info-pic3" v-else >
       <div class="top">
         <p class="two-txt-cut">{{post.title}}</p>
       </div>
@@ -53,11 +53,6 @@
 export default {
   props: {
     post: Object
-  },
-  methods: {
-    handlefn (e) {
-      this.$emit('click', e)
-    }
   }
 }
 
@@ -98,6 +93,7 @@ export default {
     margin-bottom:10px;
     .pic{
       flex: 1;
+      width: 30%;
       height: 75px;
     }
   }
