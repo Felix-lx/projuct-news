@@ -36,17 +36,17 @@ export default {
       }
       const res = await this.$axios.post(`/register`, this.form)
       console.log(res)
-      if (res.data.statusCode === 401) {
-        return this.$toast('用户名已存在')
-      } else {
+      if (res.data.statusCode === 200) {
         this.$toast.success('注册成功')
-        this.$router.push({
-          name: 'login',
-          params: {
-            username: this.form.username,
-            password: this.form.password
-          }
-        })
+        // this.$router.push({
+        //   name: 'login',
+        //   params: {
+        //     username: this.form.username,
+        //     password: this.form.password
+        //   }
+        // })
+      } else {
+        this.$toast('用户名已存在')
       }
     }
   }

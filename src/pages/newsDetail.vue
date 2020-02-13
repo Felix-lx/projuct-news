@@ -43,55 +43,96 @@
         <em>微信</em>
       </div>
     </div>
+    <!-- 精彩跟帖 -->
+    <div class="comments">
+      <div class="title">精彩跟帖</div>
+      <div v-if="commentList.length">
+        <tt-comment v-for="item in commentList" :key="item.id" :comment="item" @reply="reply">
+        </tt-comment>
+      </div>
+      <div class="comments-content" v-else >╮（╯＿╰）╭还没有人来评论，快来抢沙发</div>
+    </div>
     <!-- 底部评论 -->
     <div class="footer">
-      <div class="comment-in" v-if="false">
-        <input type="text" placeholder="跟帖">
+      <div class="comment-in" v-if="commentIn">
+        <input type="text" placeholder="跟帖" @focus="handleFocus">
         <div class="pinglun">
           <i class="iconfont iconpinglun-"></i>
           <em class="pinglun-num">12</em>
         </div>
-        <i class="iconfont iconshoucang"></i>
+        <i class="iconfont iconshoucang" :class="{star: post.has_star}" @click="shoucang"></i>
         <i class="iconfont iconfenxiang"></i>
       </div>
       <div class="comment-textarea" v-else>
-        <van-field
-          v-model="message"
-          rows="3"
-          autosize
-          type="textarea"
-          maxlength="140"
-          placeholder="请输入评论"
-          show-word-limit
-        />
-        <van-button round type="warning">发送</van-button>
+        <!-- 遮罩层，注意和textarea的层级问题 -->
+        <van-overlay :show="show" @click="handleBlur" z-index=100></van-overlay>
+        <div class="one">
+          <div class="textarea">
+            <van-field
+              v-model.trim="message"
+              rows="3"
+              autosize:false
+              type="textarea"
+              label="评论"
+              maxlength="140"
+              placeholder="请输入评论"
+              show-word-limit
+              ref="textarea"
+            />
+          </div>
+          <div class="btn" @click="sendComment">
+            <van-button round type="danger" >发 送</van-button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import ttComment from '../components/comment'
 export default {
   data () {
     return {
       post: {
         user: {}
       },
-      message: ''
+      // 发表评论
+      message: '',
+      parentId: '',
+      // input和textarea切换
+      commentIn: true,
+      // 遮罩层
+      show: false,
+      commentList: []
     }
+  },
+  components: {
+    ttComment
   },
   created () {
     this.getNewsDetail()
   },
   methods: {
-    // 加载页面
+    // 加载文章详情
     async getNewsDetail () {
       const id = this.$route.params.id
       const res = await this.$axios.get(`/post/${id}`)
       const { statusCode, data } = res.data
       if (statusCode === 200) {
         this.post = data
-        console.log(this.post)
+        this.getCommentList()
+        // console.log(this.post)
+      }
+    },
+    // 加载文章评论
+    async getCommentList () {
+      const id = this.$route.params.id
+      const res = await this.$axios.get(`/post_comment/${id}`)
+      const { statusCode, data } = res.data
+      if (statusCode === 200) {
+        this.commentList = data
+        console.log(this.commentList)
       }
     },
     // 关注
@@ -128,6 +169,57 @@ export default {
         this.post.like_length--
         this.post.has_like = false
       }
+    },
+    // 显示input框还是textarea框
+    async handleFocus () {
+      this.commentIn = false
+      this.show = true
+      // 会报错：使用v-if指令渲染不同的结构的时候，存在DOM异步更新的问题，会导致报错
+      // this.$refs.textarea.focus()
+      // 解决方式：
+      await this.$nextTick()
+      this.$refs.textarea.focus()
+    },
+    handleBlur () {
+      this.commentIn = true
+      this.show = false
+    },
+    // 文章收藏
+    async shoucang () {
+      const id = this.post.id
+      const res = await this.$axios.get(`/post_star/${id}`)
+      const { statusCode, message } = res.data
+      if (statusCode === 200) {
+        this.$toast.success(message)
+        this.post.has_star = !this.post.has_star
+      }
+    },
+    // 发表评论
+    async sendComment () {
+      if (!this.message) {
+        this.$toast.fail('输入的内容不能为空')
+        this.message = ''
+        return
+      }
+      const id = this.$route.params.id
+      const res = await this.$axios.post(`/post_comment/${id}`, {
+        content: this.message,
+        parent_id: this.parentId
+      })
+      const { statusCode, message } = res.data
+      if (statusCode === 200) {
+        this.$toast.success(message)
+        this.getCommentList()
+        this.handleBlur()
+        this.message = ''
+        this.parentId = ''
+      }
+    },
+    // 回复评论
+    reply (id) {
+      console.log('我是newsDetail组件')
+      this.parentId = id
+      this.handleFocus()
     }
   },
   watch: {
@@ -141,7 +233,7 @@ export default {
 
 <style lang="scss" scoped>
 .newsDetail{
-  padding-bottom: 54px;
+  padding-bottom: 60px;
 }
 .header{
   height: 50px;
@@ -223,40 +315,84 @@ export default {
     }
   }
 }
+.comments{
+  .title{
+    text-align: center;
+    font-size: 20px;
+    color: #666;
+    padding: 10px;
+  }
+  .comments-content{
+    text-align: center;
+    line-height: 70px;
+    height: 100px;
+    font-size: 14px;
+    color: #aaa;
+  }
+}
 .footer{
   width:100%;
-  display: flex;
-  justify-content: space-around;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  padding: 10px 0;
-  background-color: #f7f7f7;
-  input{
+  .comment-in{
+    display: flex;
+    justify-content: space-around;
+    width:100%;
+    padding:10px;
+    background-color: #f7f7f7;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    input{
     width: 180px;
     height: 34px;
     border-radius:17px;
     background-color: #ddd;
     padding-left: 20px;
-  }
-  .iconfont{
-    font-size: 24px;
-  }
-  .pinglun{
-    position: relative;
-    .pinglun-num{
-      position:absolute;
-      background: red;
-      height:20px;
-      line-height: 20px;
-      color: #fff;
-      padding: 0 10px;
-      border-radius: 10px;
-      left: 14px;
+    }
+    .iconfont{
+      font-size: 24px;
+    }
+    .pinglun{
+      position: relative;
+      .pinglun-num{
+        position:absolute;
+        background: red;
+        height:20px;
+        line-height: 20px;
+        color: #fff;
+        padding: 0 10px;
+        border-radius: 10px;
+        left: 14px;
+      }
+    }
+    .star{
+      color:red;
     }
   }
+
   .comment-textarea{
+    width:100%;
     display:flex;
+    justify-content: space-around;
+    .one{
+      width:100%;
+      display:flex;
+      justify-content: space-around;
+      padding:10px;
+      background-color: #f7f7f7;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 101;
+      .btn{
+        position:relative;
+        line-height: 110px;
+        z-index: 1111;
+
+        .van-button--normal{
+          padding:0 22px;
+        }
+      }
+    }
   }
 }
 </style>

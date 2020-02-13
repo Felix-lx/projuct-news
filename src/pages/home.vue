@@ -22,7 +22,7 @@
               :finished="item.finished"
               finished-text="没有更多了"
               @load="onLoad"
-              :immediate-check=true
+              :immediate-check=false
               :offset="50"
               ref="check"
             >
@@ -44,7 +44,7 @@ export default {
       // 分页加载组件的数据
       loading: false,
       // 事情分页加载，发送请求时需要的数据
-      pageSize: 6,
+      pageSize: 5,
       refreshing: false
     }
   },
@@ -101,10 +101,13 @@ export default {
       console.log('onload事件触发了')
       // 解决bug：一进来如果没有在头条页面先触发一次load事件，就直接切换到其他tab页面的时候，
       // 一旦开始在其他页面触发load事件，load事件就停不下来了。
+      // 解决方式一：
       // if (this.tabList[this.active].finished) {
       //   console.log('onload事件不执行')
       //   return
       // }
+      // 解决方式二：
+      //
       setTimeout(() => {
         this.tabList[this.active].pageIndex++
         this.getNewsList()

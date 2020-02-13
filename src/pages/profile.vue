@@ -1,5 +1,6 @@
 <template>
   <div class="profile">
+    <tt-header>个人中心</tt-header>
     <div class="user-info" @click="$router.push('/editProfile')">
       <div class="img">
         <!-- loading的作用：img设置了默认图片，在发送axios请求时，会先显示默认图片。等请求成功再显示头像
