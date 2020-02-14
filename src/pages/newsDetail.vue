@@ -75,7 +75,7 @@
               type="textarea"
               label="评论"
               maxlength="140"
-              placeholder="请输入评论"
+              :placeholder="placeholder"
               show-word-limit
               ref="textarea"
             />
@@ -104,7 +104,8 @@ export default {
       commentIn: true,
       // 遮罩层
       show: false,
-      commentList: []
+      commentList: [],
+      placeholder: ''
     }
   },
   components: {
@@ -174,6 +175,7 @@ export default {
     async handleFocus () {
       this.commentIn = false
       this.show = true
+      this.placeholder = '发表评论'
       // 会报错：使用v-if指令渲染不同的结构的时候，存在DOM异步更新的问题，会导致报错
       // this.$refs.textarea.focus()
       // 解决方式：
@@ -216,9 +218,11 @@ export default {
       }
     },
     // 回复评论
-    reply (id) {
+    reply (id, nickname) {
       console.log('我是newsDetail组件')
+      console.log(nickname)
       this.parentId = id
+      this.placeholder = '回复@' + nickname
       this.handleFocus()
     }
   },

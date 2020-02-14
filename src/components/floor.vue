@@ -5,7 +5,7 @@
       <div class="title">
         <div class="name">{{index}}楼 {{comment.user.nickname}} </div>
         <div class="time">{{comment.create_date | time('YYYY-MM-DD HH:mm:SS')}}</div>
-        <div class="reply" @click="reply(comment.id)">回复</div>
+        <div class="reply" @click="reply(comment.id,comment.user.nickname)">回复</div>
       </div>
       <div class="content">{{comment.content}}</div>
     </div>
@@ -20,10 +20,10 @@ export default {
     index: Number
   },
   methods: {
-    reply (id) {
+    reply (id, nickname) {
       console.log('我是floor组件')
       // 孙传子 floor传comment
-      this.$emit('reply', id)
+      this.$emit('reply', id, nickname)
     }
   }
 }

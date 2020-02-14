@@ -7,10 +7,10 @@
       <em class="iconfont iconnew"></em>
     </div>
     <tt-input type="text" placeholder="用户名/手机号码" v-model="form.username" :rules="/^\d{4,11}$/" err-msg="格式输入有误"></tt-input>
-    <tt-input type="text" placeholder="昵称" v-model="form.nickname" :rules="/^\d{4,11}$/" err-msg="格式输入有误"></tt-input>
+    <tt-input type="text" placeholder="昵称" v-model="form.nickname" :rules="/^\w{4,11}$/" err-msg="格式输入有误"></tt-input>
     <tt-input type="password" placeholder="密码" v-model="form.password" :rules="/^\d{3,12}$/" err-msg="密码格式输入有误"></tt-input>
     <tt-button @click="register">注册</tt-button>
-    <div class="register">
+    <div class="register1">
       已有账号？返回
       <router-link class="login-tip" to="/login">登陆</router-link>
     </div>
@@ -26,7 +26,6 @@ export default {
         nickname: '',
         password: ''
       }
-
     }
   },
   methods: {
@@ -34,18 +33,20 @@ export default {
       if (!this.form.username || !this.form.nickname || !this.form.password) {
         return this.$toast.fail('请输入正确的注册信息')
       }
-      const res = await this.$axios.post(`/register`, this.form)
+      const res = await this.$axios.post('/register', this.form)
       console.log(res)
       if (res.data.statusCode === 200) {
+        console.log('chufale')
         this.$toast.success('注册成功')
-        // this.$router.push({
-        //   name: 'login',
-        //   params: {
-        //     username: this.form.username,
-        //     password: this.form.password
-        //   }
-        // })
+        this.$router.push({
+          name: 'login',
+          params: {
+            username: this.form.username,
+            password: this.form.password
+          }
+        })
       } else {
+        console.log('chufale222')
         this.$toast('用户名已存在')
       }
     }

@@ -24,6 +24,7 @@
       <tt-nav name="我的关注" desc="关注的用户" @click="$router.push('/myFollow')"></tt-nav>
       <tt-nav name="我得跟帖" desc="跟帖/回复" @click="$router.push('/myComments')"></tt-nav>
       <tt-nav name="我的收藏" desc="文章/视频" @click="$router.push('/myCollect')"></tt-nav>
+      <tt-nav name="栏目管理" desc="自定义栏目" @click="$router.push('/tabManager')"></tt-nav>
       <tt-nav name="设置" @click="$router.push('/editProfile')"></tt-nav>
       <tt-nav name="退出" @click="logout"></tt-nav>
 

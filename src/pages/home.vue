@@ -1,11 +1,12 @@
 <template>
   <div class="home">
+    <!-- 头部 -->
     <div class="header">
       <div class="left">
         <span class="iconfont iconnew"></span>
       </div>
       <div class="center">
-        <div class="search">
+        <div class="search" @click="$router.push('/search')">
           <span class="iconfont iconsearch"></span>
           搜索新闻
         </div>
@@ -14,23 +15,23 @@
         <span class="iconfont iconwode"></span>
       </div>
     </div>
-      <van-tabs v-model="active" sticky animated swipeable>
-        <van-tab v-for="item in tabList" :key="item.id" :title="item.name">
-          <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-            <van-list
-              v-model="loading"
-              :finished="item.finished"
-              finished-text="没有更多了"
-              @load="onLoad"
-              :immediate-check=false
-              :offset="50"
-              ref="check"
-            >
-              <tt-newsList v-for="post in item.newsList" :key="post.id" :post="post"></tt-newsList>
-            </van-list>
-          </van-pull-refresh>
-        </van-tab>
-      </van-tabs>
+    <van-tabs v-model="active" sticky animated swipeable>
+      <van-tab v-for="item in tabList" :key="item.id" :title="item.name">
+        <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+          <van-list
+            v-model="loading"
+            :finished="item.finished"
+            finished-text="没有更多了"
+            @load="onLoad"
+            :immediate-check=false
+            :offset="50"
+            ref="check"
+          >
+            <tt-newsList v-for="post in item.newsList" :key="post.id" :post="post"></tt-newsList>
+          </van-list>
+        </van-pull-refresh>
+      </van-tab>
+    </van-tabs>
   </div>
 </template>
 
@@ -54,15 +55,25 @@ export default {
   },
   methods: {
     async getTabList () {
-      const res = await this.$axios.get(`/category`)
-      const { statusCode, data } = res.data
-      if (statusCode === 200) {
-        data.forEach(item => {
+      const haveList = JSON.parse(localStorage.getItem('haveList'))
+      if (haveList) {
+        this.tabList = haveList
+        haveList.forEach(item => {
           item.newsList = []
           item.pageIndex = 1
           item.finished = false
         })
-        this.tabList = data
+      } else {
+        const res = await this.$axios.get(`/category`)
+        const { statusCode, data } = res.data
+        if (statusCode === 200) {
+          data.forEach(item => {
+            item.newsList = []
+            item.pageIndex = 1
+            item.finished = false
+          })
+          this.tabList = data
+        }
       }
     },
 

@@ -9,6 +9,8 @@ import MyComments from '../pages/myComments'
 import MyCollect from '../pages/myCollect'
 import Home from '../pages/home'
 import NewsDetail from '../pages/newsDetail'
+import Search from '../pages/search'
+import TabManager from '../pages/tabManager'
 
 Vue.use(VueRouter)
 
@@ -22,7 +24,9 @@ const routes = [
   { path: '/myComments', component: MyComments, name: 'myComments' },
   { path: '/myCollect', component: MyCollect, name: 'myCollect' },
   { path: '/home', component: Home, name: 'home', meta: { keepAlive: true } },
-  { path: '/newsDetail/:id', component: NewsDetail, name: 'newsDetail' }
+  { path: '/newsDetail/:id', component: NewsDetail, name: 'newsDetail' },
+  { path: '/search', component: Search, name: 'search' },
+  { path: '/tabManager', component: TabManager, name: 'tabManager' }
 
 ]
 

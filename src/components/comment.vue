@@ -6,7 +6,7 @@
         <div class="name">{{comment.user.nickname}}</div>
         <div class="time">{{comment.create_date | time}}</div>
       </div>
-      <div class="reply" @click="reply(comment.id)">回复</div>
+      <div class="reply" @click="reply(comment.id,comment.user.nickname)">回复</div>
     </div>
     <!-- 评论组件给楼层组件注册reply事件，newsDetail组件给评论组件注册reply事件，相当于孙传子，子传父 -->
     <tt-floor v-if="comment.parent" :comment="comment.parent" :index="index" @reply="reply"></tt-floor>
@@ -28,10 +28,10 @@ export default {
     }
   },
   methods: {
-    reply (id) {
+    reply (id, nickname) {
       console.log('我是comment组件')
       // 子传父，将要回复的数据id传给父组件用于发请求，comment传newsdetail
-      this.$emit('reply', id)
+      this.$emit('reply', id, nickname)
     },
     // 反向给出楼层数，传入comment用于条件判断
     getCommentLength (num, comment) {

@@ -1,7 +1,8 @@
 <template>
   <div class="myCollect">
     <tt-header>我的收藏</tt-header>
-    <tt-news-list v-for="item in data" :key="item.id" :post="item" @click="getEssay"></tt-news-list>
+    <div class="noneContent" v-if="data.length===0">╮（╯＿╰）╭还没有收藏过文章</div>
+    <tt-news-list v-else v-for="item in data" :key="item.id" :post="item" @click="getEssay"></tt-news-list>
   </div>
 </template>
 
@@ -9,7 +10,7 @@
 export default {
   data () {
     return {
-      data: ''
+      data: []
     }
   },
   created () {
@@ -30,3 +31,12 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.noneContent{
+  text-align: center;
+  line-height: 70px;
+  height: 100px;
+  font-size: 14px;
+  color: #aaa;
+}
+</style>

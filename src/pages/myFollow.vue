@@ -1,6 +1,7 @@
 <template>
   <div class="myFollow">
     <tt-header>我的关注</tt-header>
+    <div class="noneContent" v-if="myFollowList.length===0">╮（╯＿╰）╭还没有关注过其他人</div>
     <div class="item" v-for="(item,index) in myFollowList" :key="item.id">
       <div class="left">
         <img :src="avatar(index)" alt="">
@@ -19,7 +20,7 @@ import img from '../assets/avatar.jpg'
 export default {
   data () {
     return {
-      myFollowList: ''
+      myFollowList: []
     }
   },
   created () {
@@ -64,6 +65,13 @@ export default {
 
 <style lang="scss" scoped>
 .myFollow{
+  .noneContent{
+  text-align: center;
+  line-height: 70px;
+  height: 100px;
+  font-size: 14px;
+  color: #aaa;
+  }
   .item{
     display: flex;
     padding:20px;
