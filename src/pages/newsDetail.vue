@@ -141,6 +141,8 @@ export default {
       const id = this.post.user.id
       const res = await this.$axios.get(`/user_follows/${id}`)
       const { statusCode, message } = res.data
+      console.log(res)
+
       if (statusCode === 200) {
         this.$toast(message)
         this.post.has_follow = true

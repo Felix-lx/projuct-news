@@ -72,6 +72,8 @@ export default {
           message: '确定要退出吗？'
         })
         localStorage.removeItem('token')
+        localStorage.removeItem('haveList')
+        localStorage.removeItem('otherList')
         localStorage.removeItem('user_id')
         this.$router.push('/login')
         this.$toast.success('退出成功')
