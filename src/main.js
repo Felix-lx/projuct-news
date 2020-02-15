@@ -51,8 +51,8 @@ axios.defaults.baseURL = 'http://localhost:3000'
 // 给axios设置响应拦截器
 axios.interceptors.response.use(function (response) {
   // 对响应数据做一些通用的处理
-  // 判断状态码是否是401或者信息是否是“用户信息验证失败”
-  if (response.data.statusCode === 401 || response.data.message === '用户信息验证失败') {
+  // 判断状态码是否是401冰球信息是否是“用户信息验证失败”
+  if (response.data.statusCode === 401 && response.data.message === '用户信息验证失败') {
     router.push('/login')
     localStorage.removeItem('token')
     localStorage.removeItem('user_id')
